@@ -1,1 +1,3 @@
-from LWW.lww import Lww
+'''
+This file contains tests for Lww class from LWW.lww module
+'''
