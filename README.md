@@ -36,9 +36,7 @@ See [tests](tests) for examples.
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
-#### Note : 
-
-The code exploits the internal GIL available for built-in datatypes in Python and achieves,
+<b>Note :</b> The code exploits the internal GIL available for built-in datatypes in Python and achieves,
 further sychronization using `RLock()` in Python. 
 
  #### Future Improvements
