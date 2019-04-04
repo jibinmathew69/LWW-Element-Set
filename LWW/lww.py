@@ -34,7 +34,21 @@ class Lww:
         :return: Boolean
         '''
 
-        return element in self.add_set
+        if element not in self.add_set:
+            # Element not in add_set
+            return False
+
+        if element not in self.remove_set:
+            # Element in add_set and not in remove_set
+            return True
+
+        if self.remove_set[element] < self.add_set[element]:
+            # Element in both add_set and remove_set, but addition is after removal
+            return True
+
+        # Element in both add_set and remove_set, but addition is before removal
+        return False
+
 
     def remove(self, element):
         '''
