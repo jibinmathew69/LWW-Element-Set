@@ -13,6 +13,7 @@ class Lww:
     def __init__(self):
         self.add_set = {}
         self.remove_set = {}
+        self.lock = RLock()
 
     def add(self, element):
         '''
