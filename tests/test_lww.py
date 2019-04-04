@@ -156,7 +156,7 @@ def test_value_internal():
     assert lww.remove_set[2] > lww.remove_set[4]
 
 
-def test_re_add_lookup():
+def test_re_add():
     lww = Lww()
 
     lww.add(1)
