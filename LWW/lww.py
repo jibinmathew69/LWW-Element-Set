@@ -35,3 +35,15 @@ class Lww:
         '''
 
         return element in self.add_set
+
+    def remove(self, element):
+        '''
+        This method removes the element from the LWW
+        :param element: Element to be removed
+        :return: None
+        '''
+
+        self.lock.acquire()
+        if self.remove_set.get(element, 0) < time.time():
+            self.remove_set[element] = time.time()
+        self.lock.release()
