@@ -61,3 +61,23 @@ class Lww:
         if self.remove_set.get(element, 0) < time.time():
             self.remove_set[element] = time.time()
         self.lock.release()
+
+
+    def compare(self, lww):
+        '''
+        This method checks whether the LWW is subset of the given LWW
+        :param lww: LWW object to be compared with
+        :return: Boolean
+        '''
+
+        self.lock.acquire()
+
+        # Check add_set is subset of lww.add_set
+        add_subset = set(self.add_set.keys()).issubset(lww.add_set.keys())
+
+        # Check remove_set is subset of lww.remove_set
+        remove_subset = set(self.remove_set.keys()).issubset(lww.remove_set.keys())
+
+        self.lock.release()
+
+        return add_subset and remove_subset
