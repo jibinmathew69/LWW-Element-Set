@@ -107,6 +107,7 @@ class Lww:
         lww = Lww()
 
         self.lock.acquire()
+        lww_1.lock.acquire()
 
         # Merge add_set
         lww.add_set = {**self.add_set, **lww_1.add_set}
@@ -122,6 +123,7 @@ class Lww:
         for element, timestamp in self.remove_set.items():
             lww.remove_set[element] = max(lww.remove_set[element], timestamp)
 
+        lww_1.lock.release()
         self.lock.release()
 
         return lww
