@@ -84,13 +84,14 @@ class Lww:
         '''
 
         self.lock.acquire()
-
+        lww.lock.acquire()
         # Check add_set is subset of lww.add_set
         add_subset = set(self.add_set.keys()).issubset(lww.add_set.keys())
 
         # Check remove_set is subset of lww.remove_set
         remove_subset = set(self.remove_set.keys()).issubset(lww.remove_set.keys())
 
+        lww.lock.release()
         self.lock.release()
 
         return add_subset and remove_subset
