@@ -14,8 +14,11 @@ def test_add():
     lww = Lww()
 
     lww.add(1)
+    lww.add("test_element")
 
     assert lww.lookup(1)
+    assert lww.lookup("test_element")
+    assert not lww.lookup("test")
 
 
 def test_remove():
