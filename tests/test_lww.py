@@ -15,4 +15,4 @@ def test_add():
 
     lww.add(1)
 
-    assert 1 in lww.add_set
+    assert lww.lookup(1)
