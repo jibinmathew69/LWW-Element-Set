@@ -193,3 +193,9 @@ def test_rep_remove_add():
     lww.remove(1)
 
     assert not lww.lookup(1)
+
+
+def test_empty_lookup():
+    lww = Lww()
+
+    assert not lww.lookup(1)
