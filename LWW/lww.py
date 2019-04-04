@@ -5,6 +5,8 @@ from (Conflict-free Replicated Data Types)CRDT
 
 import time
 from threading import RLock
+from config.log_config import LOGGER
+
 
 class Lww:
     '''
@@ -22,10 +24,16 @@ class Lww:
         :param element: Element to be add into LWW
         :return: None
         '''
+
         self.lock.acquire()
-        if self.add_set.get(element, 0) < time.time():
-            self.add_set[element] = time.time()
-        self.lock.release()
+
+        try:
+            if self.add_set.get(element, 0) < time.time():
+                self.add_set[element] = time.time()
+        except TypeError as error:
+            LOGGER.error(str(error))
+        finally:
+            self.lock.release()
 
     def lookup(self, element):
         '''
