@@ -60,3 +60,33 @@ def test_compare():
     assert lww1.compare(lww2)
 
     assert not lww2.compare(lww1)
+
+
+def test_merge():
+    '''
+    This function test the merge method of Lww
+    :return: None
+    '''
+
+    lww1 = Lww()
+    lww2 = Lww()
+
+    lww1.add(1)
+    lww1.add(2)
+    lww1.remove(1)
+
+    lww2.add(1)
+    lww2.add(3)
+
+    lww1.remove(3)
+
+    lww2.remove(1)
+
+    lww = lww1.merge(lww2)
+
+    assert {1, 2, 3}.issubset(lww.add_set.keys())
+    assert {1, 3}.issubset(lww.remove_set.keys())
+    assert lww.add_set[1] == lww2.add_set[1]
+    assert lww.add_set[1] > lww1.add_set[1]
+    assert lww.add_set[3] < lww1.remove_set[3]
+    assert lww.remove_set[1] == lww2.remove_set[1]
