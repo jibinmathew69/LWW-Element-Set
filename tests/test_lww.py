@@ -102,3 +102,16 @@ def test_add_exception(caplog):
     lww.add([1, 2, 3])
 
     assert "unhashable type: 'list'" in caplog.text
+
+
+def test_remove_exception(caplog):
+    '''
+    This function test the exception handling of the add
+    :param caplog: pytest fixture
+    :return: None
+    '''
+
+    lww = Lww()
+    lww.remove({})
+
+    assert "unhashable type: 'dict'" in caplog.text
