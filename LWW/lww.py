@@ -3,6 +3,9 @@ This module contains the (Last-Write-Wins)LWW-element-set class
 from (Conflict-free Replicated Data Types)CRDT
 '''
 
+import time
+from threading import RLock
+
 class Lww:
     '''
     LWW class for CRDTs
