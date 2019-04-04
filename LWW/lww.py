@@ -25,15 +25,13 @@ class Lww:
         :return: None
         '''
 
-        self.lock.acquire()
+        with self.lock:
+            try:
+                if self.add_set.get(element, 0) < time.time():
+                    self.add_set[element] = time.time()
+            except TypeError as error:
+                LOGGER.error(str(error))
 
-        try:
-            if self.add_set.get(element, 0) < time.time():
-                self.add_set[element] = time.time()
-        except TypeError as error:
-            LOGGER.error(str(error))
-        finally:
-            self.lock.release()
 
     def lookup(self, element):
         '''
@@ -65,14 +63,13 @@ class Lww:
         :return: None
         '''
 
-        self.lock.acquire()
-        try:
-            if self.remove_set.get(element, 0) < time.time():
-                self.remove_set[element] = time.time()
-        except TypeError as error:
-            LOGGER.error(str(error))
-        finally:
-            self.lock.release()
+        with self.lock:
+            try:
+                if self.remove_set.get(element, 0) < time.time():
+                    self.remove_set[element] = time.time()
+            except TypeError as error:
+                LOGGER.error(str(error))
+
 
 
 
@@ -83,16 +80,15 @@ class Lww:
         :return: Boolean
         '''
 
-        self.lock.acquire()
-        other.lock.acquire()
-        # Check add_set is subset of other.add_set
-        add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
+        with self.lock:
+            with other.lock:
 
-        # Check remove_set is subset of other.remove_set
-        remove_subset = set(self.remove_set.keys()).issubset(other.remove_set.keys())
+                # Check add_set is subset of other.add_set
+                add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
 
-        other.lock.release()
-        self.lock.release()
+                # Check remove_set is subset of other.remove_set
+                remove_subset = set(self.remove_set.keys()).issubset(other.remove_set.keys())
+
 
         return add_subset and remove_subset
 
@@ -106,24 +102,22 @@ class Lww:
 
         lww = Lww()
 
-        self.lock.acquire()
-        other.lock.acquire()
+        with self.lock:
+            with other.lock:
 
-        # Merge add_set
-        lww.add_set = {**self.add_set, **other.add_set}
+                # Merge add_set
+                lww.add_set = {**self.add_set, **other.add_set}
 
-        # Merge remove_set
-        lww.remove_set = {**self.remove_set, **other.remove_set}
+                # Merge remove_set
+                lww.remove_set = {**self.remove_set, **other.remove_set}
 
-        # Update lww with latest timestamp in add_set
-        for element, timestamp in self.add_set.items():
-            lww.add_set[element] = max(lww.add_set[element], timestamp)
+                # Update lww with latest timestamp in add_set
+                for element, timestamp in self.add_set.items():
+                    lww.add_set[element] = max(lww.add_set[element], timestamp)
 
-        # Update lww with latest timestamp in remove_set
-        for element, timestamp in self.remove_set.items():
-            lww.remove_set[element] = max(lww.remove_set[element], timestamp)
+                # Update lww with latest timestamp in remove_set
+                for element, timestamp in self.remove_set.items():
+                    lww.remove_set[element] = max(lww.remove_set[element], timestamp)
 
-        other.lock.release()
-        self.lock.release()
 
         return lww
