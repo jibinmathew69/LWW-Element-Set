@@ -22,4 +22,7 @@ class Lww:
         :param element: Element to be add into LWW
         :return: None
         '''
-        pass
+        self.lock.acquire()
+        if self.add_set.get(element, 0) < time.time():
+            self.add_set[element] = time.time()
+        self.lock.release()
