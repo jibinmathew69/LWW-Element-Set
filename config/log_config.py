@@ -1,9 +1,12 @@
+'''
+This module contains the logging configurations and the logger object
+'''
 import logging
-log_config  =  {
-    'filename' : 'error.log',
+LOG_CONFIG = {
+    'filename' : 'log/error.log',
     'filemode' : 'a+',
     'format' : '%(name)s - %(levelname)s - %(message)s',
     'level' : logging.ERROR
 }
-logging.basicConfig(**log_config)
-logger = logging.getLogger()
+logging.basicConfig(**LOG_CONFIG)
+LOGGER = logging.getLogger()
