@@ -26,3 +26,12 @@ class Lww:
         if self.add_set.get(element, 0) < time.time():
             self.add_set[element] = time.time()
         self.lock.release()
+
+    def lookup(self, element):
+        '''
+        This method check whether a given element is in LWW
+        :param element: Element whose presence is the checked in LWW
+        :return: Boolean
+        '''
+
+        return element in self.add_set
