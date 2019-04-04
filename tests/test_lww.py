@@ -164,3 +164,14 @@ def test_re_add_lookup():
     lww.add(1)
 
     assert lww.lookup(1)
+
+
+def test_re_remove():
+    lww = Lww()
+
+    lww.add(1)
+    lww.remove(1)
+    lww.add(1)
+    lww.remove(1)
+
+    assert not lww.lookup(1)
