@@ -15,7 +15,8 @@ class Lww:
     def __init__(self):
         self.add_set = {}
         self.remove_set = {}
-        self.lock = RLock()
+        self.add_lock = RLock()
+        self.remove_lock = RLock()
 
     def add(self, element):
         '''
@@ -25,7 +26,7 @@ class Lww:
         :return: None
         '''
 
-        with self.lock:
+        with self.add_lock:
             try:
                 if self.add_set.get(element, 0) < time.time():
                     self.add_set[element] = time.time()
@@ -40,20 +41,21 @@ class Lww:
         :return: Boolean
         '''
 
-        if element not in self.add_set:
-            # Element not in add_set
+        with self.add_lock, self.remove_lock:
+            if element not in self.add_set:
+                # Element not in add_set
+                return False
+
+            if element not in self.remove_set:
+                # Element in add_set and not in remove_set
+                return True
+
+            if self.remove_set[element] < self.add_set[element]:
+                # Element in both add_set and remove_set, but addition is after removal
+                return True
+
+            # Element in both add_set and remove_set, but addition is before removal
             return False
-
-        if element not in self.remove_set:
-            # Element in add_set and not in remove_set
-            return True
-
-        if self.remove_set[element] < self.add_set[element]:
-            # Element in both add_set and remove_set, but addition is after removal
-            return True
-
-        # Element in both add_set and remove_set, but addition is before removal
-        return False
 
 
     def remove(self, element):
@@ -63,7 +65,7 @@ class Lww:
         :return: None
         '''
 
-        with self.lock:
+        with self.remove_lock:
             try:
                 if self.remove_set.get(element, 0) < time.time():
                     self.remove_set[element] = time.time()
@@ -80,7 +82,7 @@ class Lww:
         :return: Boolean
         '''
 
-        with self.lock, other.lock:
+        with self.add_lock, self.remove_lock, other.add_lock, other.remove_lock:
 
             # Check add_set is subset of other.add_set
             add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
@@ -101,7 +103,7 @@ class Lww:
 
         lww = Lww()
 
-        with self.lock, other.lock:
+        with self.add_lock, self.remove_lock, other.add_lock, other.remove_lock:
 
             # Merge add_set
             lww.add_set = {**self.add_set, **other.add_set}
