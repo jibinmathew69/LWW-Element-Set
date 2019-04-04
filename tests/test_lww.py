@@ -90,3 +90,15 @@ def test_merge():
     assert lww.add_set[1] > lww1.add_set[1]
     assert lww.add_set[3] < lww1.remove_set[3]
     assert lww.remove_set[1] == lww2.remove_set[1]
+
+def test_add_exception(caplog):
+    '''
+    This function test the exception handling of the add
+    :param caplog: pytest fixture
+    :return: None
+    '''
+
+    lww = Lww()
+    lww.add([1, 2, 3])
+
+    assert "unhashable type: 'list'" in caplog.text
