@@ -142,6 +142,10 @@ def test_key_internal():
 
 
 def test_value_internal():
+    '''
+    This function validates internal element timestamps
+    :return: None
+    '''
     lww = Lww()
 
     lww.add(1)
@@ -157,6 +161,10 @@ def test_value_internal():
 
 
 def test_re_add():
+    '''
+    This function validates repeated addtition of same element
+    :return: None
+    '''
     lww = Lww()
 
     lww.add(1)
@@ -167,6 +175,10 @@ def test_re_add():
 
 
 def test_re_remove():
+    '''
+    This function validates repeated removal of same element
+    :return: None
+    '''
     lww = Lww()
 
     lww.add(1)
@@ -178,6 +190,10 @@ def test_re_remove():
 
 
 def test_remove_add():
+    '''
+    This function validates remove element followed by addition
+    :return: None
+    '''
     lww = Lww()
 
     lww.remove(1)
@@ -186,6 +202,10 @@ def test_remove_add():
     assert lww.lookup(1)
 
 def test_rep_remove_add():
+    '''
+    This function validates repeated remove of element
+    :return: None
+    '''
     lww = Lww()
 
     lww.remove(1)
@@ -196,6 +216,10 @@ def test_rep_remove_add():
 
 
 def test_empty_lookup():
+    '''
+    This function validates empty lookup
+    :return: None
+    '''
     lww = Lww()
 
     assert not lww.lookup(1)
