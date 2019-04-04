@@ -115,3 +115,39 @@ def test_remove_exception(caplog):
     lww.remove({})
 
     assert "unhashable type: 'dict'" in caplog.text
+
+
+def test_key_internal():
+    '''
+    This function validates the state of the elements in Lww
+    :return: None
+    '''
+    lww = Lww()
+
+    lww.add(1)
+    lww.add(2)
+    lww.add(3)
+    lww.remove(4)
+    lww.remove(2)
+
+    assert {1, 2, 3}.issubset(lww.add_set.keys())
+    assert {2, 4}.issubset(lww.remove_set.keys())
+
+    assert 4 not in lww.add_set.keys()
+    assert 1 not in lww.remove_set.keys()
+    assert 3 not in lww.remove_set.keys()
+
+
+def test_value_internal():
+    lww = Lww()
+
+    lww.add(1)
+    lww.add(2)
+    lww.add(3)
+    lww.remove(4)
+    lww.remove(2)
+
+    assert lww.remove_set[2] > lww.add_set[2]
+    assert lww.add_set[3] > lww.add_set[2]
+    assert lww.remove_set[4] > lww.add_set[3]
+    assert lww.remove_set[2] > lww.remove_set[4]
