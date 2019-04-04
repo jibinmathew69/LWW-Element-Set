@@ -154,3 +154,13 @@ def test_value_internal():
     assert lww.add_set[3] > lww.add_set[2]
     assert lww.remove_set[4] > lww.add_set[3]
     assert lww.remove_set[2] > lww.remove_set[4]
+
+
+def test_re_add_lookup():
+    lww = Lww()
+
+    lww.add(1)
+    lww.remove(1)
+    lww.add(1)
+
+    assert lww.lookup(1)
