@@ -76,44 +76,44 @@ class Lww:
 
 
 
-    def compare(self, lww):
+    def compare(self, other):
         '''
         This method checks whether the LWW is subset of the given LWW
-        :param lww: LWW object to be compared with
+        :param other: LWW object to be compared with
         :return: Boolean
         '''
 
         self.lock.acquire()
-        lww.lock.acquire()
-        # Check add_set is subset of lww.add_set
-        add_subset = set(self.add_set.keys()).issubset(lww.add_set.keys())
+        other.lock.acquire()
+        # Check add_set is subset of other.add_set
+        add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
 
-        # Check remove_set is subset of lww.remove_set
-        remove_subset = set(self.remove_set.keys()).issubset(lww.remove_set.keys())
+        # Check remove_set is subset of other.remove_set
+        remove_subset = set(self.remove_set.keys()).issubset(other.remove_set.keys())
 
-        lww.lock.release()
+        other.lock.release()
         self.lock.release()
 
         return add_subset and remove_subset
 
-    def merge(self, lww_1):
+    def merge(self, other):
         '''
         This method merge the LWW with the given LWW and returns a new LWW
         without affecting the original LWW
-        :param lww_1:
+        :param other:
         :return: Lww
         '''
 
         lww = Lww()
 
         self.lock.acquire()
-        lww_1.lock.acquire()
+        other.lock.acquire()
 
         # Merge add_set
-        lww.add_set = {**self.add_set, **lww_1.add_set}
+        lww.add_set = {**self.add_set, **other.add_set}
 
         # Merge remove_set
-        lww.remove_set = {**self.remove_set, **lww_1.remove_set}
+        lww.remove_set = {**self.remove_set, **other.remove_set}
 
         # Update lww with latest timestamp in add_set
         for element, timestamp in self.add_set.items():
@@ -123,7 +123,7 @@ class Lww:
         for element, timestamp in self.remove_set.items():
             lww.remove_set[element] = max(lww.remove_set[element], timestamp)
 
-        lww_1.lock.release()
+        other.lock.release()
         self.lock.release()
 
         return lww
