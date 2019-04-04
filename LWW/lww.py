@@ -80,14 +80,13 @@ class Lww:
         :return: Boolean
         '''
 
-        with self.lock:
-            with other.lock:
+        with self.lock, other.lock:
 
-                # Check add_set is subset of other.add_set
-                add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
+            # Check add_set is subset of other.add_set
+            add_subset = set(self.add_set.keys()).issubset(other.add_set.keys())
 
-                # Check remove_set is subset of other.remove_set
-                remove_subset = set(self.remove_set.keys()).issubset(other.remove_set.keys())
+            # Check remove_set is subset of other.remove_set
+            remove_subset = set(self.remove_set.keys()).issubset(other.remove_set.keys())
 
 
         return add_subset and remove_subset
@@ -102,22 +101,21 @@ class Lww:
 
         lww = Lww()
 
-        with self.lock:
-            with other.lock:
+        with self.lock, other.lock:
 
-                # Merge add_set
-                lww.add_set = {**self.add_set, **other.add_set}
+            # Merge add_set
+            lww.add_set = {**self.add_set, **other.add_set}
 
-                # Merge remove_set
-                lww.remove_set = {**self.remove_set, **other.remove_set}
+            # Merge remove_set
+            lww.remove_set = {**self.remove_set, **other.remove_set}
 
-                # Update lww with latest timestamp in add_set
-                for element, timestamp in self.add_set.items():
-                    lww.add_set[element] = max(lww.add_set[element], timestamp)
+            # Update lww with latest timestamp in add_set
+            for element, timestamp in self.add_set.items():
+                lww.add_set[element] = max(lww.add_set[element], timestamp)
 
-                # Update lww with latest timestamp in remove_set
-                for element, timestamp in self.remove_set.items():
-                    lww.remove_set[element] = max(lww.remove_set[element], timestamp)
+            # Update lww with latest timestamp in remove_set
+            for element, timestamp in self.remove_set.items():
+                lww.remove_set[element] = max(lww.remove_set[element], timestamp)
 
 
         return lww
