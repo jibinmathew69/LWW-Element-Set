@@ -81,3 +81,33 @@ class Lww:
         self.lock.release()
 
         return add_subset and remove_subset
+
+    def merge(self, lww_1):
+        '''
+        This method merge the LWW with the given LWW and returns a new LWW
+        without affecting the original LWW
+        :param lww_1:
+        :return: Lww
+        '''
+
+        lww = Lww()
+
+        self.lock.acquire()
+
+        # Merge add_set
+        lww.add_set = {**self.add_set, **lww_1.add_set}
+
+        # Merge remove_set
+        lww.remove_set = {**self.remove_set, **lww_1.remove_set}
+
+        # Update lww with latest timestamp in add_set
+        for element, timestamp in self.add_set.items():
+            lww.add_set[element] = max(lww.add_set[element], timestamp)
+
+        # Update lww with latest timestamp in remove_set
+        for element, timestamp in self.remove_set.items():
+            lww.remove_set[element] = max(lww.remove_set[element], timestamp)
+
+        self.lock.release()
+
+        return lww
