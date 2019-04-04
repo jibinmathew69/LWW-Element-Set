@@ -66,9 +66,14 @@ class Lww:
         '''
 
         self.lock.acquire()
-        if self.remove_set.get(element, 0) < time.time():
-            self.remove_set[element] = time.time()
-        self.lock.release()
+        try:
+            if self.remove_set.get(element, 0) < time.time():
+                self.remove_set[element] = time.time()
+        except TypeError as error:
+            LOGGER.error(str(error))
+        finally:
+            self.lock.release()
+
 
 
     def compare(self, lww):
