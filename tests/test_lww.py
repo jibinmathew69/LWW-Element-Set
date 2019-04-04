@@ -32,3 +32,31 @@ def test_remove():
 
     lww.add(1)
     assert lww.lookup(1)
+
+
+def test_compare():
+    '''
+    This function test the compare method of Lww
+    :return: None
+    '''
+
+    lww1 = Lww()
+    lww2 = Lww()
+
+    lww1.add(1)
+    lww1.add(2)
+
+    lww2.add(1)
+    lww2.add(2)
+    lww2.add(3)
+
+    lww1.remove(1)
+    lww1.remove(2)
+
+    lww2.remove(1)
+    lww2.remove(2)
+    lww2.remove(3)
+
+    assert lww1.compare(lww2)
+
+    assert not lww2.compare(lww1)
